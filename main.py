@@ -39,3 +39,42 @@ engine = create_engine("sqlite:///Entreterimento.db", echo=False)
 Session = sessionmaker(bind=engine)
 
 Base.metadata.create_all(engine)
+
+def cadastrar_serie():
+    nome_serie = input("digite o nome da serie: ").strip().capitalize()
+
+    with Session() as session:
+        try:
+            serie = Serie(nome=nome_serie)
+            session.add(serie)
+            session.commit()
+            print("Serie Cadastrada com sucesso!✔😎")
+        except Exception as erro:
+            session.rollback()
+            print(f"ocorreu um erro {erro}")
+
+def cadastrar_episodio():
+    nome_ep = input("Digite o nome do episodio: ").strip().capitalize()
+    temp_ep = int(input(f"Digite o tempo do {nome_ep}: ")).capitalize()
+    descricao_ep = input(f"Digite a descrição  do {nome_ep}o: ").capitalize()
+    faixa_etaria_ep = input(f"Digite a faixa etaria do {nome_ep}: ").capitalize()
+
+    buscar_serie = input(f"digite o nome da serie do ep {nome_ep}:").strip().capitalize()
+     
+    with Session() as session:
+        try:
+            serie =session.query(Serie).filter_by(nome =buscar_serie).first()
+            if serie ==None:
+                print("nao encontrei nenhuma serie com esse nome.")
+                return
+            else:
+                episodio = Episodio(nome=nome_ep, tempo_ep=temp_ep, descricao = descricao_ep, faixa_etaria = faixa_etaria_ep )
+                session.add(episodio)
+                session.commit()
+                print(f"episodio cadastrado com sucesso!")
+        except Exception as erro:
+            session.rollback()
+            print(f"Ocorreu um erro {erro}")
+
+                
+
