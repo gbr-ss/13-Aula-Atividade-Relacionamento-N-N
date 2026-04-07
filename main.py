@@ -44,7 +44,7 @@ def cadastrar_serie():
     nome_serie = input("digite o nome da serie: ").strip().capitalize()
     nota_serie = int(input("Digite a nota da serie: "))
     ano_serie = int(input("Digite a ano da serie: "))
-    genero_serie = int(input("Digite o genero da serie: ")).capitalize()
+    genero_serie = input("Digite o genero da serie: ")
 
     with Session() as session:
         try:
@@ -71,7 +71,7 @@ def cadastrar_episodio():
                 print("nao encontrei nenhuma serie com esse nome.")
                 return
             else:
-                episodio = Episodio(nome=nome_ep, tempo_ep=temp_ep, descricao = descricao_ep, faixa_etaria = faixa_etaria_ep,serie_id=serie.id)
+                episodio = Episodio(titulo=nome_ep, temp_ep=temp_ep, descricao = descricao_ep, faixa_etaria = faixa_etaria_ep,serie_id=serie.id)
                 session.add(episodio)
                 session.commit()
                 print(f"episodio cadastrado com sucesso!")
@@ -91,10 +91,6 @@ def listar_Serie():
             session.rollback()
             print(f"Ocorreu um erro {erro}")    
 
-for i in range(4):
-    cadastrar_serie()
-for i in range(10):
-    cadastrar_episodio()
 
 
                 
