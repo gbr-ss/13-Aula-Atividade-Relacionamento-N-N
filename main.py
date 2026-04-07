@@ -85,13 +85,23 @@ def listar_Serie():
             serie = session.query(Serie).all()
             for d in serie:
                 print(f"\n{d}")
-                for episodio in d.episodio:
+                for episodio in d.episodios:
                     print(episodio)
         except Exception as erro:
             session.rollback()
             print(f"Ocorreu um erro {erro}")    
 
-
-
-                
-
+def serie_especifico(id_episodio):
+    with Session() as session:
+        try:
+            episodio = session.query(Episodio).filter(Episodio.id == id_episodio).first()
+            if not episodio:
+                print("Episodio não encontrado.")
+                return
+            print("Episodio encontrado:", episodio)
+            serie = episodio.serie
+            print("Série do episódio:")
+            print(serie.nome)
+        except Exception as erro:
+            session.rollback()
+            print(f"Ocorreu um erro {erro}")
