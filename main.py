@@ -42,10 +42,13 @@ Base.metadata.create_all(engine)
 
 def cadastrar_serie():
     nome_serie = input("digite o nome da serie: ").strip().capitalize()
+    nota_serie = int(input("Digite a nota da serie: "))
+    ano_serie = int(input("Digite a ano da serie: "))
+    genero_serie = int(input("Digite o genero da serie: ")).capitalize()
 
     with Session() as session:
         try:
-            serie = Serie(nome=nome_serie)
+            serie = Serie(nome=nome_serie, nota=nota_serie, ano = ano_serie, genero = genero_serie )
             session.add(serie)
             session.commit()
             print("Serie Cadastrada com sucesso!✔😎")
@@ -55,8 +58,8 @@ def cadastrar_serie():
 
 def cadastrar_episodio():
     nome_ep = input("Digite o nome do episodio: ").strip().capitalize()
-    temp_ep = int(input(f"Digite o tempo do {nome_ep}: ")).capitalize()
-    descricao_ep = input(f"Digite a descrição  do {nome_ep}o: ").capitalize()
+    temp_ep = int(input(f"Digite o tempo do {nome_ep}: "))
+    descricao_ep = input(f"Digite a descrição  do {nome_ep}: ").capitalize()
     faixa_etaria_ep = input(f"Digite a faixa etaria do {nome_ep}: ").capitalize()
 
     buscar_serie = input(f"digite o nome da serie do ep {nome_ep}:").strip().capitalize()
@@ -68,13 +71,31 @@ def cadastrar_episodio():
                 print("nao encontrei nenhuma serie com esse nome.")
                 return
             else:
-                episodio = Episodio(nome=nome_ep, tempo_ep=temp_ep, descricao = descricao_ep, faixa_etaria = faixa_etaria_ep )
+                episodio = Episodio(nome=nome_ep, tempo_ep=temp_ep, descricao = descricao_ep, faixa_etaria = faixa_etaria_ep,serie_id=serie.id)
                 session.add(episodio)
                 session.commit()
                 print(f"episodio cadastrado com sucesso!")
-        except Exception as erro:
+        except Exception as erro:        
             session.rollback()
             print(f"Ocorreu um erro {erro}")
+            
+def listar_Serie():
+    with Session() as session:
+        try:
+            serie = session.query(Serie).all()
+            for d in serie:
+                print(f"\n{d}")
+                for episodio in d.episodio:
+                    print(episodio)
+        except Exception as erro:
+            session.rollback()
+            print(f"Ocorreu um erro {erro}")    
+
+for i in range(4):
+    cadastrar_serie()
+for i in range(10):
+    cadastrar_episodio()
+
 
                 
 
